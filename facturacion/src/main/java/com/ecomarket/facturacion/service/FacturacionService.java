@@ -5,7 +5,6 @@ import com.ecomarket.facturacion.model.FacturacionEntity;
 import com.ecomarket.facturacion.model.UsuarioDTO;
 import com.ecomarket.facturacion.model.VentaDTO;
 import com.ecomarket.facturacion.repository.FacturacionRespository;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +39,7 @@ public class FacturacionService {
             throw new ResourceNotFoundException("No existe este usuario");
         }
 
-        // Actualiza los campos necesarios
+
         facturacionExistente.setIdVenta(nuevaFacturacion.getIdVenta());
         facturacionExistente.setIdUsuario(nuevaFacturacion.getIdUsuario());
         facturacionExistente.setFechaEmision(nuevaFacturacion.getFechaEmision());
@@ -48,6 +47,12 @@ public class FacturacionService {
 
 
         return facturacionRespository.save(facturacionExistente);
+    }
+    public void deleteFacturacion(Integer id) {
+        FacturacionEntity facturacion = facturacionRespository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe esta facturación"));
+
+        facturacionRespository.delete(facturacion);
     }
 
 
