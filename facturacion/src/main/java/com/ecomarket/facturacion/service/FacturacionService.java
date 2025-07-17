@@ -25,6 +25,17 @@ public class FacturacionService {
         return facturacionRespository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontro factura con el ID: "+id));
     }
+    public FacturacionEntity crearFacturacion(FacturacionEntity facturacion) {
+        VentaDTO ventadto = ventaService.obtenerVentaoPorId(facturacion.getIdVenta());
+        if (ventadto == null) {
+            throw new ResourceNotFoundException("No existe esta venta");
+        }
+        UsuarioDTO usuarioDTO = usuarioService.obtenerUsuarioId(facturacion.getIdUsuario());
+        if (usuarioDTO == null) {
+            throw new ResourceNotFoundException("No existe esta usuario");
+        }
+        return facturacionRespository.save(facturacion);
+    }
     public FacturacionEntity updateFacturacion(Integer id, FacturacionEntity nuevaFacturacion) {
         FacturacionEntity facturacionExistente = facturacionRespository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe esta facturación"));

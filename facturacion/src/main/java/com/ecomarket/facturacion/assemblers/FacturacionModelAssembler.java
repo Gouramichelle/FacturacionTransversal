@@ -14,8 +14,8 @@ public class FacturacionModelAssembler implements RepresentationModelAssembler<F
     @Override
     public EntityModel<FacturacionEntity> toModel(FacturacionEntity entity) {
         return EntityModel.of(entity,
-                linkTo(methodOn(FacturacionController.class).getVentasById(venta.getIdVenta())).withSelfRel(),
-                linkTo(methodOn(FacturacionController.class).getAllVentas()).withRel("Ventas"));
-    }
+                linkTo(methodOn(FacturacionController.class).getFacturaById(entity.getIdFacturacion())).withSelfRel(),
+                linkTo(methodOn(FacturacionController.class).getAllFacturas()).withRel("Ventas"));
     }
 }
+
