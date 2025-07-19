@@ -34,6 +34,7 @@ public class FacturacionService {
         if (usuarioDTO == null) {
             throw new ResourceNotFoundException("No existe esta usuario");
         }
+
         return facturacionRespository.save(facturacion);
     }
     public FacturacionEntity updateFacturacion(Integer id, FacturacionEntity nuevaFacturacion) {
