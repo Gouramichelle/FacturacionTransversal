@@ -29,13 +29,12 @@ public class VentaServiceTest {
     void setUp() {
         ventaMock = new VentaDTO();
         ventaMock.setId(1);
-        ventaMock.setId(10);
         ventaMock.setTotalVenta(10000.0);
     }
 
     @Test
     void obtenerVentaPorId_ok() {
-        String urlEsperada = "http://localhost:8082/api/v1/ventas/id/1"; // Asegúrate que coincida con application-test
+        String urlEsperada = "http://localhost:8082/ventas/id/1"; // Asegúrate que coincida con application-test
         when(restTemplate.getForObject(urlEsperada, VentaDTO.class)).thenReturn(ventaMock);
 
         VentaDTO resultado = ventaService.obtenerVentaoPorId(1);

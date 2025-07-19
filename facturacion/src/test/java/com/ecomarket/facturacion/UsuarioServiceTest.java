@@ -36,7 +36,7 @@ public class UsuarioServiceTest {
 
     @Test
     void obtenerUsuarioId_ok() {
-        String urlEsperada = "http://localhost:8086/api/v1/usuarios/1"; // Reemplaza por la URL correcta de pruebas
+        String urlEsperada = "http://localhost:8086/usuario/1";
         when(restTemplate.getForObject(urlEsperada, UsuarioDTO.class))
                 .thenReturn(usuarioMock);
 
