@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class UsuarioService {
     private RestTemplate restTemplate;
-    @Value("{services.usuario.url}")
+    @Value("${services.usuario.url}")
     private String usuarioUrl;
     public UsuarioService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

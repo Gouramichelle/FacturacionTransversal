@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class VentaService {
     private RestTemplate restTemplate;
-    @Value("{services.venta.url}")
+    @Value("${services.ventas.url}")
     private String ventaUrl;
     public VentaService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
