@@ -80,6 +80,34 @@ public class FacturacionServiceTest {
     }
 
     @Test
+    void crearFacturacion_ok() {
+        when(ventaService.obtenerVentaoPorId(facturacion.getIdVenta())).thenReturn(new VentaDTO());
+        when(usuarioService.obtenerUsuarioId(facturacion.getIdUsuario())).thenReturn(new UsuarioDTO());
+        when(facturacionRespository.save(any())).thenReturn(facturacion);
+
+        FacturacionEntity resultado = facturacionService.crearFacturacion(facturacion);
+
+        assertNotNull(resultado);
+        assertEquals("Boleta", resultado.getTipoDocumento());
+        verify(facturacionRespository).save(facturacion);
+    }
+
+    @Test
+    void crearFacturacion_ventaNoExiste() {
+        when(ventaService.obtenerVentaoPorId(anyInt())).thenReturn(null);
+
+        assertThrows(ResourceNotFoundException.class, () -> facturacionService.crearFacturacion(facturacion));
+    }
+
+    @Test
+    void crearFacturacion_usuarioNoExiste() {
+        when(ventaService.obtenerVentaoPorId(anyInt())).thenReturn(new VentaDTO());
+        when(usuarioService.obtenerUsuarioId(anyInt())).thenReturn(null);
+
+        assertThrows(ResourceNotFoundException.class, () -> facturacionService.crearFacturacion(facturacion));
+    }
+
+    @Test
     void updateFacturacion_ok() {
         FacturacionEntity nuevosDatos = new FacturacionEntity();
         nuevosDatos.setIdVenta(2);
