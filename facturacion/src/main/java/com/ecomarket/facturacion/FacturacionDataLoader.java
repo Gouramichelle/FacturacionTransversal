@@ -1,4 +1,4 @@
-package com.ecomarket.facturacion.service;
+package com.ecomarket.facturacion;
 
 import com.ecomarket.facturacion.model.FacturacionEntity;
 import com.ecomarket.facturacion.repository.FacturacionRespository;

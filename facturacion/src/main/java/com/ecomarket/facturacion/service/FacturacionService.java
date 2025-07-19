@@ -2,6 +2,7 @@ package com.ecomarket.facturacion.service;
 
 import com.ecomarket.facturacion.exception.ResourceNotFoundException;
 import com.ecomarket.facturacion.model.FacturacionEntity;
+import com.ecomarket.facturacion.model.LogisticaDTO;
 import com.ecomarket.facturacion.model.UsuarioDTO;
 import com.ecomarket.facturacion.model.VentaDTO;
 import com.ecomarket.facturacion.repository.FacturacionRespository;
@@ -18,13 +19,22 @@ public class FacturacionService {
     private UsuarioService usuarioService;
     @Autowired
     private VentaService ventaService;
+    @Autowired
+    private LogisticaService logisticaService;
+
+
     public List<FacturacionEntity> obtenerAllFacturacion(){
         return facturacionRespository.findAll();
     }
+
+
     public FacturacionEntity obtenerFacturacionById(Integer id){
         return facturacionRespository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontro factura con el ID: "+id));
     }
+
+
+
     public FacturacionEntity crearFacturacion(FacturacionEntity facturacion) {
         VentaDTO ventadto = ventaService.obtenerVentaoPorId(facturacion.getIdVenta());
         if (ventadto == null) {
@@ -34,8 +44,23 @@ public class FacturacionService {
         if (usuarioDTO == null) {
             throw new ResourceNotFoundException("No existe esta usuario");
         }
+        try {
+            LogisticaDTO logisticaDTO = new LogisticaDTO();
+            logisticaDTO.setId(facturacion.getIdUsuario());
+            logisticaDTO.setIdFactura(facturacion.getIdFacturacion());
+            logisticaDTO.setEstado("En Proceso");
+
+            logisticaService.crearLogistica(logisticaDTO);
+
+        } catch (Exception e) {
+            System.err.println(" Error al crear registro en logística: " + e.getMessage());
+
+        }
+
 
         return facturacionRespository.save(facturacion);
+
+
     }
     public FacturacionEntity updateFacturacion(Integer id, FacturacionEntity nuevaFacturacion) {
         FacturacionEntity facturacionExistente = facturacionRespository.findById(id)
