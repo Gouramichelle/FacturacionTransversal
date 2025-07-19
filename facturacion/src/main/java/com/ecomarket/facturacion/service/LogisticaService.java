@@ -19,7 +19,7 @@ public class LogisticaService {
     }
 
     public LogisticaDTO crearLogistica(LogisticaDTO logisticaDTO) {
-        String url = logisticaUrl + "/logistica";
+        String url = logisticaUrl;
         ResponseEntity<LogisticaDTO> response = restTemplate.postForEntity(url, logisticaDTO, LogisticaDTO.class);
         return response.getBody();
     }

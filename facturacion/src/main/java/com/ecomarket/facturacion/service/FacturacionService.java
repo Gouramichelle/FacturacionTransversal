@@ -6,8 +6,11 @@ import com.ecomarket.facturacion.model.LogisticaDTO;
 import com.ecomarket.facturacion.model.UsuarioDTO;
 import com.ecomarket.facturacion.model.VentaDTO;
 import com.ecomarket.facturacion.repository.FacturacionRespository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.List;
 
@@ -34,7 +37,7 @@ public class FacturacionService {
     }
 
 
-
+    @Transactional
     public FacturacionEntity crearFacturacion(FacturacionEntity facturacion) {
         VentaDTO ventadto = ventaService.obtenerVentaoPorId(facturacion.getIdVenta());
         if (ventadto == null) {
@@ -44,21 +47,26 @@ public class FacturacionService {
         if (usuarioDTO == null) {
             throw new ResourceNotFoundException("No existe esta usuario");
         }
-        try {
-            LogisticaDTO logisticaDTO = new LogisticaDTO();
-            logisticaDTO.setId(facturacion.getIdUsuario());
-            logisticaDTO.setIdFactura(facturacion.getIdFacturacion());
-            logisticaDTO.setEstado("En Proceso");
+        facturacionRespository.save(facturacion);
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                try {
+                    LogisticaDTO logisticaDTO = new LogisticaDTO();
+                    logisticaDTO.setId(facturacion.getIdUsuario());
+                    logisticaDTO.setIdFactura(facturacion.getIdFacturacion());
+                    logisticaDTO.setEstado("En Proceso");
 
-            logisticaService.crearLogistica(logisticaDTO);
+                    logisticaService.crearLogistica(logisticaDTO);
+                    System.out.println("✅ Registro en logística creado exitosamente.");
+                } catch (Exception e) {
+                    System.err.println("❌ Error al crear registro en logística post-commit: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
 
-        } catch (Exception e) {
-            System.err.println(" Error al crear registro en logística: " + e.getMessage());
-
-        }
-
-
-        return facturacionRespository.save(facturacion);
+        return facturacion;
 
 
     }
